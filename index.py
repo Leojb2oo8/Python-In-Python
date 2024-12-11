@@ -1,9 +1,7 @@
 variableTypes = ["int","str","bool","float"]
 
-
-
 code = []
-variables = []
+variables = [['aefd', '78'], ['age', ''], ['length', 'tyrye5']]
 
 
 #Save Code
@@ -11,24 +9,72 @@ def saveCode():
     print("\n\n\n")
     print(code)
     print(variables)
+    askForVar()
 
 
 
 #Variable Modification
-def varMod():
-    choice = input("(1) New Variable\n(2) Existing Variable\n>> ")
-    if choice == "1":
-        variableName = input("What do you whant the variable to be named:\n>> ")
-        data = input("What do you whant the variable data to be:\n>> ")
-        code.append([len(code)+1, "a", data])
+#def varMod():
+#    choice = input("(1) New Variable\n(2) Existing Variable\n>> ")
+#    if choice == "1":
+#        variableName = input("What do you whant the variable to be named:\n>> ")
+#        data = input("What do you whant the variable data to be:\n>> ")
+#        code.append([len(code)+1, "a", data])
+#
+#        if variableName not in variables:
+#            variables.append([variableName, ""])
+#    elif choice == "2":
+#        newInput()
+#    else:
+#        print("Error")
+#        varMod()
 
-        if variableName not in variables:
-            variables.append([variableName, ""])
-    elif choice == "2":
-        newInput()
-    else:
-        print("Error")
-        varMod()
+
+def askForVar():
+    choice = input("Do you want to use an existing variable? (Y/N)")
+    if choice == "Y":
+        if len(variables) == 0:
+            print("No Variables")
+            return False
+
+        else:
+            for x in variables:
+                print("("+str(variables.index(x)+1)+") "+ x[0])
+            choice = input(">> ")
+            if choice.isdigit() == True:
+                if int(choice) > 0 and int(choice) <= len(variables):
+                    return variables[int(choice)-1]
+            
+    print("Error")
+    
+    askForVar()
+    
+
+
+
+
+#If Statement
+def newIf():
+    print("Value 1:")
+    value1 = askForVar()
+    if value1 == False:
+        value1 = input("What do you want to compare (first value; e.g. 1, 2312, hello):\n>> ")
+        value1 = [value1, value1]
+
+    compareson = input("How do you want to compare (compareson; e.g. ==, !=, >=, <):\n>> ")
+
+    print("Value 2:")
+    value2 = askForVar()
+    if value2 == False:
+        value2 = input("What do you want to compare (second value; e.g. 1, 2312, hello):\n>> ")
+        value2 = [value2, value2]
+    
+    
+    code.append([len(code)+1, "if", value1, compareson, value2]) 
+
+
+
+
 
 
 
@@ -47,12 +93,10 @@ def removeLine():
     print("Error")
     removeLine()
 
-
 #Print
 def newPrint():
     data = input("What do you want to print:\n>> ")
     code.append([len(code)+1, "print", data])
-
 
 #input
 def newInput():
@@ -63,9 +107,6 @@ def newInput():
     if variableName not in variables:
         variables.append([variableName, ""])
    
-
-
-
 #View Code
 def viewCode():
     print("////////////////CODE/////////////////\n")
@@ -75,6 +116,10 @@ def viewCode():
             print(str(x[0])+"    "+x[1] + "('"+x[2]+"')")
         elif x[1] == "input":
             print(str(x[0])+"    "+x[2][0] +" = "+ x[1] + "('"+x[2][1]+"')")
+        
+        elif x[1] == "if":
+            print("if "+x[2][0]+" "+x[3]+" "+x[4][0]+":")
+
         else:
             print(str(x[0])+"    ")
 
@@ -107,16 +152,18 @@ def viewVariables():
 
     print("\n//////////////VARIABLES///////////////////")
 
-
+#Menu
 def menu():
     choice = input("(1) Code Edditing\n(2) Code Actions\n(3) Quit\n>> ")
     if choice == "1":
-        choice = input("(1) Print\n(2) Input\n(3) Remove Line\n>> ")
+        choice = input("(1) Print\n(2) Input\n(3) Input\n(4) Remove Line\n>> ")
         if choice == "1":
             newPrint()
         elif choice == "2":
             newInput()
         elif choice == "3":
+            newIf()
+        elif choice == "4":
             removeLine()
         else:
             print("Error")
