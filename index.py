@@ -31,7 +31,7 @@ def saveCode():
 
 
 def askForVar():
-    choice = input("Do you want to use an existing variable? (Y/N)")
+    choice = input("Do you want to use an existing variable? (Y/N)\n>> ")
     if choice == "Y":
         if len(variables) == 0:
             print("No Variables")
@@ -44,14 +44,29 @@ def askForVar():
             if choice.isdigit() == True:
                 if int(choice) > 0 and int(choice) <= len(variables):
                     return variables[int(choice)-1]
-            
+    elif choice == "N":
+        return False        
     print("Error")
     
     askForVar()
     
-
-
-
+def askForOperators():
+    choice = input("What operator do you whant to use?\n(1) '=='\n(2) '!='\n(3) '>'\n(4) '>='\n(5) '<'\n(6) '<='\n>> ")
+    if choice == "1":
+        return "=="
+    elif choice == "2":
+        return "!="     
+    elif choice == "3":
+        return ">"
+    elif choice == "4":
+        return ">="
+    elif choice == "5":
+        return "<"
+    elif choice == "6":
+        return "<="
+    
+    print("Error")
+    askForOperators()
 
 #If Statement
 def newIf():
@@ -61,7 +76,7 @@ def newIf():
         value1 = input("What do you want to compare (first value; e.g. 1, 2312, hello):\n>> ")
         value1 = [value1, value1]
 
-    compareson = input("How do you want to compare (compareson; e.g. ==, !=, >=, <):\n>> ")
+    compareson = askForOperators()
 
     print("Value 2:")
     value2 = askForVar()
@@ -69,12 +84,17 @@ def newIf():
         value2 = input("What do you want to compare (second value; e.g. 1, 2312, hello):\n>> ")
         value2 = [value2, value2]
     
-    
-    code.append([len(code)+1, "if", value1, compareson, value2]) 
+    ifCode = [[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", [[len(code)+2, "print", "world"]]]]
+    code.append([len(code)+1, "if", value1, compareson, value2, ifCodeMaker(len(code)+1, ifCode)]) 
 
 
-
-
+def ifCodeMaker(lineNum, ifCode):
+    #ifCode =[[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", [[len(code)+2, "print", "world"]]]]
+    numAdder = 0
+    for x in ifCode:
+        numAdder += 1
+        x[0] = lineNum+numAdder
+    return ifCode
 
 
 
@@ -104,40 +124,75 @@ def newInput():
     data = input("What do you want the text to be:\n>> ")
     code.append([len(code)+1, "input", [variableName, data]])
 
-    if variableName not in variables:
-        variables.append([variableName, ""])
+    for x in variables:
+        if x[0] == variableName:
+            return
+    
+    variables.append([variableName, ""])
    
 #View Code
-def viewCode():
-    print("////////////////CODE/////////////////\n")
+def viewCode(codeToRun, tabulation, start = True, ):
+    if start: 
+        print("////////////////CODE/////////////////\n")
 
-    for x in code:
+    for x in codeToRun:
         if x[1] == "print":
-            print(str(x[0])+"    "+x[1] + "('"+x[2]+"')")
+            print(str(x[0])+tabulation+x[1] + "('"+x[2]+"')")
         elif x[1] == "input":
-            print(str(x[0])+"    "+x[2][0] +" = "+ x[1] + "('"+x[2][1]+"')")
+            print(str(x[0])+tabulation+x[2][0] +" = "+ x[1] + "('"+x[2][1]+"')")
         
         elif x[1] == "if":
-            print("if "+x[2][0]+" "+x[3]+" "+x[4][0]+":")
+            print(str(x[0])+tabulation+"if "+x[2][0]+" "+x[3]+" "+x[4][0]+":")
+            viewCode(x[5], tabulation+"    ", False)
 
         else:
             print(str(x[0])+"    ")
 
-    print("\n//////////////CODE///////////////////")
+    if start: 
+        print("\n//////////////CODE///////////////////")
 
 def find(listToFind, dataToFind):
     for x in listToFind:
         if dataToFind in x:
             return listToFind.index(x)
 
+
+def ifStatementRunCode(value1, operator, value2):
+    if operator == "==":
+        if value1 == value2:
+            return True
+    elif operator == "!=":
+        if value1 != value2:
+            return True
+    elif operator == ">":
+        if value1 > value2:
+            return True
+    elif operator == ">=":
+        if value1 >= value2:
+            return True
+    elif operator == "<":
+        if value1 < value2:
+            return True
+    elif operator == "<=":
+        if value1 <= value2:
+            return True
+    else:
+        return False
+
+
+
 #Run Code
-def runCode():
+def runCode(codeToRun):
     print("////////////////OUTPUT/////////////////\n")
-    for x in code:
+    for x in codeToRun:
         if x[1] == "print":
             print(x[2])
         elif x[1] == "input":
             variables[find(variables, x[2][0])][1] = input(x[2][1]+"\n>> ")
+        elif x[1] == "if":
+            if ifStatementRunCode(x[2][0], x[3], x[4][0]):
+                runCode(x[5])
+
         else:
             print("")
 
@@ -156,7 +211,7 @@ def viewVariables():
 def menu():
     choice = input("(1) Code Edditing\n(2) Code Actions\n(3) Quit\n>> ")
     if choice == "1":
-        choice = input("(1) Print\n(2) Input\n(3) Input\n(4) Remove Line\n>> ")
+        choice = input("(1) Print\n(2) Input\n(3) If\n(4) Remove Line\n>> ")
         if choice == "1":
             newPrint()
         elif choice == "2":
@@ -171,9 +226,9 @@ def menu():
     elif choice == "2":
         choice = input("(1) View Code\n(2) Run Code\n(3) View Variables\n(4) Save code\n>> ")
         if choice == "1":
-            viewCode()
+            viewCode(code, "    ")
         elif choice == "2":
-            runCode()
+            runCode(code)
         elif choice == "3":
             viewVariables()
         elif choice == "4":
