@@ -20,7 +20,7 @@ def saveCode():
 #    if choice == "1":
 #        variableName = input("What do you whant the variable to be named:\n>> ")
 #        data = input("What do you whant the variable data to be:\n>> ")
-#        code.append([len(code)+1, "a", data])
+#        wichCodeToUse().append([len(code)+1, "a", data])
 #
 #        if variableName not in variables:
 #            variables.append([variableName, ""])
@@ -46,7 +46,7 @@ def askForVar():
                 if int(choice) > 0 and int(choice) <= len(variables):
                     return variables[int(choice)-1]
     elif choice == "N":
-        return False        
+        return False         
     print("Error")
     
     askForVar()
@@ -69,6 +69,11 @@ def askForOperators():
     print("Error")
     askForOperators()
 
+def wichCodeToUse():
+    if code.index(code.length-1)[1] == "if":
+        return code[code.length-1][1]
+    return code
+
 #If Statement
 def newIf():
     print("Value 1:")
@@ -86,7 +91,7 @@ def newIf():
         value2 = [value2, value2]
     
     ifCode = [[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", ifCodeMaker([[len(code)+1, "print", "world"]])]]
-    code.append([len(code)+1, "if", value1, compareson, value2, ifCodeMaker(len(code)+1, ifCode), ])
+    wichCodeToUse().append([len(code)+1, "if", value1, compareson, value2, ifCodeMaker(len(code)+1, ifCode)])
 
 
 def ifCodeMaker(lineNum, ifCode):
@@ -117,13 +122,13 @@ def removeLine():
 #Print
 def newPrint():
     data = input("What do you want to print:\n>> ")
-    code.append([len(code)+1, "print", data])
+    wichCodeToUse().append([len(code)+1, "print", data])
 
 #input
 def newInput():
     variableName = input("What do you want the variable to be named:\n>> ")
     data = input("What do you want the text to be:\n>> ")
-    code.append([len(code)+1, "input", [variableName, data]])
+    wichCodeToUse().append([len(code)+1, "input", [variableName, data]])
 
     for x in variables:
         if x[0] == variableName:
