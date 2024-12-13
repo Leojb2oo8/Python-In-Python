@@ -33,7 +33,7 @@ def saveCode():
 
 def askForVar():
     choice = input("Do you want to use an existing variable? (Y/N)\n>> ")
-    if choice == "Y":
+    if choice == "Y" or choice == "y":
         if len(variables) == 0:
             print("No Variables")
             return False
@@ -45,7 +45,7 @@ def askForVar():
             if choice.isdigit() == True:
                 if int(choice) > 0 and int(choice) <= len(variables):
                     return variables[int(choice)-1]
-    elif choice == "N":
+    elif choice == "N" or choice == "n":
         return False         
     print("Error")
     
@@ -70,8 +70,10 @@ def askForOperators():
     askForOperators()
 
 def wichCodeToUse():
-    if code.index(code.length-1)[1] == "if":
-        return code[code.length-1][1]
+    if len(code) == 0:
+        return code
+    elif code[len(code)-1][1] == "if":
+        return code[len(code)-1][5]
     return code
 
 #If Statement
@@ -90,17 +92,17 @@ def newIf():
         value2 = input("What do you want to compare (second value; e.g. 1, 2312, hello):\n>> ")
         value2 = [value2, value2]
     
-    ifCode = [[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", ifCodeMaker([[len(code)+1, "print", "world"]])]]
-    wichCodeToUse().append([len(code)+1, "if", value1, compareson, value2, ifCodeMaker(len(code)+1, ifCode)])
+    #ifCode = [[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", ifCodeMaker([[len(code)+1, "print", "world"]])]]
+    #wichCodeToUse().append([len(code)+1, "if", value1, compareson, value2, ifCodeMaker(len(code)+1, ifCode)])
+    wichCodeToUse().append([len(code)+1, "if", value1, compareson, value2, []])
 
 
-def ifCodeMaker(lineNum, ifCode):
-    #ifCode =[[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", [[len(code)+2, "print", "world"]]]]
-    numAdder = 0
-    for x in ifCode:
-        numAdder += 1
-        x[0] = lineNum+numAdder
-    return ifCode
+def lineNumMaker():
+    counter = 1
+    for x in code:
+        if x[1] == "if":
+            for y in x[1]:
+                
 
 
 
