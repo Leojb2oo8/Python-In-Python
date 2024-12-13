@@ -1,4 +1,5 @@
 variableTypes = ["int","str","bool","float"]
+currentIndentation = 1
 
 code = []
 variables = [['aefd', '78'], ['age', ''], ['length', 'tyrye5']]
@@ -84,8 +85,8 @@ def newIf():
         value2 = input("What do you want to compare (second value; e.g. 1, 2312, hello):\n>> ")
         value2 = [value2, value2]
     
-    ifCode = [[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", [[len(code)+2, "print", "world"]]]]
-    code.append([len(code)+1, "if", value1, compareson, value2, ifCodeMaker(len(code)+1, ifCode)]) 
+    ifCode = [[len(code)+2, "print", "hello"], [len(code)+2, "if", ["value1", "value1"], "==", "value2", ifCodeMaker([[len(code)+1, "print", "world"]])]]
+    code.append([len(code)+1, "if", value1, compareson, value2, ifCodeMaker(len(code)+1, ifCode), ])
 
 
 def ifCodeMaker(lineNum, ifCode):
