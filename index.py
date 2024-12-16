@@ -41,7 +41,7 @@ def askForVar():
         else:
             for x in variables:
                 print("("+str(variables.index(x)+1)+") "+ x[0])
-            choice = input(">> ")
+1
             if choice.isdigit() == True:
                 if int(choice) > 0 and int(choice) <= len(variables):
                     return variables[int(choice)-1]
@@ -97,12 +97,12 @@ def newIf():
     wichCodeToUse().append([len(code)+1, "if", value1, compareson, value2, []])
 
 
-def lineNumMaker():
+"""def lineNumMaker():
     counter = 1
     for x in code:
         if x[1] == "if":
             for y in x[1]:
-                
+"""                
 
 
 
